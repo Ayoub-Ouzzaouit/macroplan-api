@@ -1,5 +1,7 @@
-﻿using MacroPlan.API.Models;
+﻿using MacroPlan.API.Data;
+using MacroPlan.API.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace MacroPlan.API.Controllers
 {
@@ -7,39 +9,41 @@ namespace MacroPlan.API.Controllers
     [Route("api/[controller]")]
     public class ProduitsController : ControllerBase
     {
-        private static List<Produit> _produits = new List<Produit>
+        private readonly MacroPlanContext _context;
+
+        public ProduitsController(MacroPlanContext context)
         {
-            new Produit { Id = 1, Nom = "Chicken Bowl", Prix = 8.50m, Calories = 450, Proteines = 42, Glucides = 35, Lipides = 8 },
-            new Produit { Id = 2, Nom = "Beef & Rice", Prix = 9.00m, Calories = 520, Proteines = 48, Glucides = 40, Lipides = 10 }
-        };
+            _context = context;
+        }
 
         [HttpGet]
-        public ActionResult<IEnumerable<Produit>> GetAll()
+        public async Task<ActionResult<IEnumerable<Produit>>> GetAll()
         {
-            return Ok(_produits);
+            return Ok(await _context.Produits.ToListAsync());
         }
 
         [HttpGet("{id}")]
-        public ActionResult<Produit> GetById(int id)
+        public async Task<ActionResult<Produit>> GetById(int id)
         {
-            var produit = _produits.FirstOrDefault(p => p.Id == id);
+            var produit = await _context.Produits.FindAsync(id);
             if (produit == null)
                 return NotFound();
 
             return Ok(produit);
         }
+
         [HttpPost]
-        public ActionResult<Produit> Create(Produit produit)
+        public async Task<ActionResult<Produit>> Create(Produit produit)
         {
-            produit.Id = _produits.Max(p => p.Id) + 1;
-            _produits.Add(produit);
+            _context.Produits.Add(produit);
+            await _context.SaveChangesAsync();
             return CreatedAtAction(nameof(GetById), new { id = produit.Id }, produit);
         }
 
         [HttpPut("{id}")]
-        public ActionResult<Produit> Update(int id, Produit produit)
+        public async Task<ActionResult<Produit>> Update(int id, Produit produit)
         {
-            var existing = _produits.FirstOrDefault(p => p.Id == id);
+            var existing = await _context.Produits.FindAsync(id);
             if (existing == null)
                 return NotFound();
 
@@ -50,19 +54,20 @@ namespace MacroPlan.API.Controllers
             existing.Glucides = produit.Glucides;
             existing.Lipides = produit.Lipides;
 
+            await _context.SaveChangesAsync();
             return Ok(existing);
         }
 
         [HttpDelete("{id}")]
-        public ActionResult Delete(int id)
+        public async Task<ActionResult> Delete(int id)
         {
-            var produit = _produits.FirstOrDefault(p => p.Id == id);
+            var produit = await _context.Produits.FindAsync(id);
             if (produit == null)
                 return NotFound();
 
-            _produits.Remove(produit);
+            _context.Produits.Remove(produit);
+            await _context.SaveChangesAsync();
             return NoContent();
         }
     }
-
 }
