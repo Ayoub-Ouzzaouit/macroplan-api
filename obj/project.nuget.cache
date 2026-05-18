@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "dgSpecHash": "rxj5X+WnDDk=",
+  "success": true,
+  "projectFilePath": "C:\\Users\\YOYOL\\source\\repos\\MacroPlan.API\\MacroPlan.API\\MacroPlan.API.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\YOYOL\\.nuget\\packages\\microsoft.aspnetcore.openapi\\10.0.8\\microsoft.aspnetcore.openapi.10.0.8.nupkg.sha512",
+    "C:\\Users\\YOYOL\\.nuget\\packages\\microsoft.openapi\\2.0.0\\microsoft.openapi.2.0.0.nupkg.sha512"
+  ],
+  "logs": []
+}

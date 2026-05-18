@@ -1,0 +1,6 @@
+@MacroPlan.API_HostAddress = http://localhost:5172
+
+GET {{MacroPlan.API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
