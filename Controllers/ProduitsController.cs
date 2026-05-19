@@ -16,19 +16,21 @@ namespace MacroPlan.API.Controllers
         private readonly MacroPlanContext _context;
         private readonly NutritionService _nutritionService;
 
-
         public ProduitsController(MacroPlanContext context, NutritionService nutritionService)
         {
             _context = context;
             _nutritionService = nutritionService;
         }
 
+        /// <summary>Retourne tous les produits du catalogue</summary>
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Produit>>> GetAll()
         {
             return Ok(await _context.Produits.ToListAsync());
         }
 
+        /// <summary>Retourne un produit par son ID</summary>
+        /// <param name="id">Identifiant du produit</param>
         [HttpGet("{id}")]
         public async Task<ActionResult<Produit>> GetById(int id)
         {
@@ -39,6 +41,7 @@ namespace MacroPlan.API.Controllers
             return Ok(produit);
         }
 
+        /// <summary>Crée un nouveau produit dans le catalogue</summary>
         [HttpPost]
         public async Task<ActionResult<Produit>> Create(Produit produit)
         {
@@ -47,6 +50,8 @@ namespace MacroPlan.API.Controllers
             return CreatedAtAction(nameof(GetById), new { id = produit.Id }, produit);
         }
 
+        /// <summary>Met à jour un produit existant</summary>
+        /// <param name="id">Identifiant du produit à modifier</param>
         [HttpPut("{id}")]
         public async Task<ActionResult<Produit>> Update(int id, Produit produit)
         {
@@ -65,8 +70,8 @@ namespace MacroPlan.API.Controllers
             return Ok(existing);
         }
 
-
-
+        /// <summary>Supprime un produit du catalogue</summary>
+        /// <param name="id">Identifiant du produit à supprimer</param>
         [HttpDelete("{id}")]
         public async Task<ActionResult> Delete(int id)
         {
@@ -79,6 +84,10 @@ namespace MacroPlan.API.Controllers
             return NoContent();
         }
 
+        /// <summary>
+        /// Retourne les 5 meilleurs repas selon le profil nutritionnel de l'utilisateur connecté.
+        /// Score calculé sur le ratio protéines/calories par rapport à la cible TDEE.
+        /// </summary>
         [HttpGet("suggestions")]
         public async Task<ActionResult> GetSuggestions()
         {
@@ -93,7 +102,6 @@ namespace MacroPlan.API.Controllers
             var resultat = _nutritionService.CalculerBesoins(profil);
             var produits = await _context.Produits.ToListAsync();
 
-            // Calculer un score de pertinence pour chaque produit
             var suggestions = produits.Select(p => new
             {
                 Produit = p,
@@ -114,16 +122,10 @@ namespace MacroPlan.API.Controllers
 
         private double CalculerScore(Produit produit, ResultatNutritionnel cible)
         {
-            // Score basé sur le ratio protéines/calories
             double ratioProteine = (double)produit.Proteines / produit.Calories;
             double cibleRatio = (double)cible.ProteinesG / cible.CaloriesCibles;
-
-            // Plus le ratio est proche de la cible, plus le score est élevé
             double score = 100 - (Math.Abs(ratioProteine - cibleRatio) * 1000);
             return Math.Max(0, score);
         }
     }
-
-
 }
-

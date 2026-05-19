@@ -22,6 +22,11 @@ namespace MacroPlan.API.Controllers
             _nutritionService = nutritionService;
         }
 
+        /// <summary>
+        /// Passe une commande de repas pour l'utilisateur connecté.
+        /// Retourne les macros totales de la commande et l'écart avec le profil nutritionnel cible.
+        /// Activer DoubleViande applique un multiplicateur x1.5 sur les macros du produit.
+        /// </summary>
         [HttpPost]
         public async Task<ActionResult> PasserCommande(CommandeDto dto)
         {
@@ -64,6 +69,7 @@ namespace MacroPlan.API.Controllers
             return Ok(response);
         }
 
+        /// <summary>Retourne toutes les commandes de l'utilisateur connecté avec le détail des produits.</summary>
         [HttpGet]
         public async Task<ActionResult> GetMesCommandes()
         {

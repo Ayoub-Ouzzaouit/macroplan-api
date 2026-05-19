@@ -21,6 +21,10 @@ namespace MacroPlan.API.Controllers
             _nutritionService = nutritionService;
         }
 
+        /// <summary>
+        /// Crée le profil nutritionnel de l'utilisateur connecté et retourne ses besoins caloriques
+        /// calculés via la formule Mifflin-St Jeor (BMR, TDEE, macros cibles).
+        /// </summary>
         [HttpPost]
         public async Task<ActionResult<ResultatNutritionnel>> CreerProfil(ProfilNutritionnel profil)
         {

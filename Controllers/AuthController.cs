@@ -21,6 +21,7 @@ namespace MacroPlan.API.Controllers
             _configuration = configuration;
         }
 
+        /// <summary>Crée un nouveau compte utilisateur</summary>
         [HttpPost("register")]
         public async Task<ActionResult> Register(RegisterModel model)
         {
@@ -38,6 +39,10 @@ namespace MacroPlan.API.Controllers
             return Ok("Compte créé avec succès");
         }
 
+        /// <summary>
+        /// Authentifie un utilisateur et retourne un token JWT valable 7 jours.
+        /// À inclure dans le header Authorization: Bearer {token} pour les routes protégées.
+        /// </summary>
         [HttpPost("login")]
         public async Task<ActionResult> Login(LoginModel model)
         {
