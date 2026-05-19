@@ -1,9 +1,11 @@
 using MacroPlan.API.Data;
+using MacroPlan.API.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using MacroPlan.API.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,6 +18,7 @@ builder.Services.AddDbContext<MacroPlanContext>(options =>
 builder.Services.AddIdentity<IdentityUser, IdentityRole>()
     .AddEntityFrameworkStores<MacroPlanContext>()
     .AddDefaultTokenProviders();
+builder.Services.AddScoped<NutritionService>();
 
 builder.Services.AddAuthentication(options =>
 {

@@ -12,5 +12,6 @@ namespace MacroPlan.API.Data
         }
 
         public DbSet<Produit> Produits { get; set; }
+        public DbSet<ProfilNutritionnel> ProfilsNutritionnels { get; set; }
     }
 }
